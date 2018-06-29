@@ -99,7 +99,7 @@ static void canon_header_string(void **state) {
     hash.data = "f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b"; hash.len = 64;
     endpoint.data = "s3.amazonaws.com"; endpoint.len = 16;
 
-    retval = ngx_aws_auth__canonize_headers(pool, NULL, &bucket, &date, &hash, &endpoint);
+    retval = ngx_aws_auth__canonize_headers(pool, NULL, &bucket, &date, &hash, &endpoint, NULL);
     assert_string_equal(retval.canon_header_str->data, 
         "host:bugait.s3.amazonaws.com\nx-amz-content-sha256:f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b\nx-amz-date:20160221T063112Z\n");
 }
@@ -115,7 +115,7 @@ static void signed_headers(void **state) {
     hash.data = "f0e4c2f76c58916ec258f246851bea091d14d4247a2fc3e18694461b1816e13b"; hash.len = 64;
     endpoint.data = "s3.amazonaws.com"; endpoint.len = 16;
 
-    retval = ngx_aws_auth__canonize_headers(pool, NULL, &bucket, &date, &hash, &endpoint);
+    retval = ngx_aws_auth__canonize_headers(pool, NULL, &bucket, &date, &hash, &endpoint, NULL);
     assert_string_equal(retval.signed_header_names->data, "host;x-amz-content-sha256;x-amz-date");
 }
 
@@ -236,7 +236,7 @@ static void canonical_request_sans_qs(void **state) {
 	request.args = EMPTY_STRING;
   request.connection = NULL;
 
-	result = ngx_aws_auth__make_canonical_request(pool, &request, &bucket, &aws_date, &endpoint);
+	result = ngx_aws_auth__make_canonical_request(pool, &request, &bucket, &aws_date, &endpoint, NULL);
 	assert_string_equal(result.canon_request->data, "GET\n\
 /\n\
 \n\
@@ -271,7 +271,7 @@ static void basic_get_signature(void **state) {
 	ngx_decode_base64(&signing_key, &signing_key_b64e);
 
 	struct AwsSignedRequestDetails result = ngx_aws_auth__compute_signature(pool, &request,
-								&signing_key, &key_scope, &bucket, &endpoint);
+								&signing_key, &key_scope, &bucket, &endpoint, NULL);
 	assert_string_equal(result.signature->data, "4ed4ec875ff02e55c7903339f4f24f8780b986a9cc9eff03f324d31da6a57690");
 }
 
