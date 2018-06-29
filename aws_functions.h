@@ -55,10 +55,7 @@ struct AwsSignedRequestDetails {
 
 // mainly useful to avoid having to full instantiate request structures for
 // tests...
-#define safe_ngx_log_error(req, ...)                                  \
-  if (req->connection) {                                              \
-    ngx_log_error(NGX_LOG_ERR, req->connection->log, 0, __VA_ARGS__); \
-  }
+#define safe_ngx_log_error(req, ...) {}
 
 static const ngx_str_t EMPTY_STRING_SHA256 = ngx_string("e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855");
 static const ngx_str_t EMPTY_STRING = ngx_null_string;
